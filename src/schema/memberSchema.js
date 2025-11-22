@@ -17,13 +17,21 @@ const memberSchema = new mongoose.Schema(
       trim: true,
     },
     phone: {
-      type: String, // Changed to String to handle leading zeros
+      type: String,
       required: true,
     },
+
+    // ⭐ Added Class Type Field
+    classType: {
+      type: String,
+      required: true,
+      enum: ["Gym", "Zumba", "Cardio + Gym"], // only these classes allowed
+    },
+
     membership: {
       type: String,
       required: true,
-      enum: ["monthly", "quarterly", "yearly"], // optional for validation
+      enum: ["monthly", "quarterly", "yearly"],
     },
     amountPaid: {
       type: Number,
@@ -31,13 +39,13 @@ const memberSchema = new mongoose.Schema(
     },
     startDate: {
       type: Date,
-      default: Date.now, // automatically sets when member is created
+      default: Date.now,
     },
     endDate: {
       type: Date,
     },
   },
-  { timestamps: true } // adds createdAt and updatedAt automatically
+  { timestamps: true }
 );
 
 // Automatically calculate endDate based on membership plan
