@@ -156,3 +156,13 @@ export const revenue = async (req, res) => {
     });
   }
 };
+
+export const getMembersByClass = async (req, res) => {
+  try {
+    const classType = req.params.classType; // Gym, Cardio, Zumba
+    const members = await member.find({ classType }); // use correct field name
+    res.status(200).json(members); // <-- send array directly
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

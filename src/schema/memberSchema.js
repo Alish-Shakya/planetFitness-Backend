@@ -25,7 +25,7 @@ const memberSchema = new mongoose.Schema(
     classType: {
       type: String,
       required: true,
-      enum: ["Gym", "Zumba", "Cardio + Gym"], // only these classes allowed
+      enum: ["gym", "zumba", "cardio"], // only these classes allowed
     },
 
     membership: {
