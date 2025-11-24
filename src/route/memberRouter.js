@@ -4,6 +4,7 @@ import multer from "multer";
 import {
   createMember,
   getExpiringMembers,
+  getMemberGrowth,
   getMembersByClass,
   getNewMembers,
   readAllMembers,
@@ -37,5 +38,7 @@ memberRoute.get("/expiring-members", getExpiringMembers);
 memberRoute.get("/revenue", revenue);
 
 memberRoute.get("/classes/:classType", getMembersByClass);
+
+memberRoute.get("/member-growth", getMemberGrowth);
 
 export default memberRoute;

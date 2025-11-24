@@ -166,3 +166,67 @@ export const getMembersByClass = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getMemberGrowth = async (req, res) => {
+  try {
+    // Get year from query ?year=2025
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+
+    const startDate = new Date(year, 0, 1); // Jan 1
+    const endDate = new Date(year, 11, 31, 23, 59, 59); // Dec 31
+
+    const data = await member.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lte: endDate,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    // Initialize 12 months with 0
+    const result = months.map((m) => ({
+      month: m,
+      members: 0,
+    }));
+
+    // Fill actual data
+    data.forEach((item) => {
+      const index = item._id - 1;
+      result[index].members = item.count;
+    });
+
+    res.json({
+      success: true,
+      year,
+      data: result,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
