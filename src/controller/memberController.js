@@ -157,6 +157,48 @@ export const revenue = async (req, res) => {
   }
 };
 
+// 📊 Revenue Chart (Monthly)
+export const revenueChart = async (req, res) => {
+  try {
+    const year = parseInt(req.query.year) || new Date().getFullYear();
+
+    const start = new Date(`${year}-01-01`);
+    const end = new Date(`${year}-12-31`);
+
+    const members = await member.find({
+      createdAt: { $gte: start, $lte: end },
+    });
+
+    // Initialize 12 months with 0 revenue
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const revenueData = months.map((month) => ({ month, revenue: 0 }));
+
+    // Sum revenue per month
+    members.forEach((mem) => {
+      const monthIndex = mem.createdAt.getMonth();
+      revenueData[monthIndex].revenue += mem.amountPaid;
+    });
+
+    res.status(200).json({ success: true, data: revenueData });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 export const getMembersByClass = async (req, res) => {
   try {
     const classType = req.params.classType; // Gym, Cardio, Zumba

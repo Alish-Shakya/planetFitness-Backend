@@ -9,6 +9,7 @@ import {
   getNewMembers,
   readAllMembers,
   revenue,
+  revenueChart,
 } from "../controller/memberController.js";
 
 const memberRoute = express.Router();
@@ -25,10 +26,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// ✅ Create new member
 memberRoute.post("/add-member", upload.single("photo"), createMember);
 
-// ✅ Fetch all members
 memberRoute.get("/all-members", readAllMembers);
 
 memberRoute.get("/new-member", getNewMembers);
@@ -36,6 +35,8 @@ memberRoute.get("/new-member", getNewMembers);
 memberRoute.get("/expiring-members", getExpiringMembers);
 
 memberRoute.get("/revenue", revenue);
+
+memberRoute.get("/revenue-chart", revenueChart);
 
 memberRoute.get("/classes/:classType", getMembersByClass);
 
