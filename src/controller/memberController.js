@@ -28,6 +28,12 @@ export const createMember = async (req, res, next) => {
 
 export const readAllMembers = async (req, res, next) => {
   try {
+    const today = new Date();
+    const deleteBefore = new Date();
+    deleteBefore.setDate(today.getDate() - 3);
+
+    await member.deleteMany({ endDate: { $lt: deleteBefore } });
+
     let result = await member.find({});
     res.status(200).json({
       success: true,
@@ -73,39 +79,6 @@ export const getNewMembers = async (req, res) => {
   }
 };
 
-//expiring within one week
-// export const getExpiringMembers = async (req, res) => {
-//   try {
-//     const today = new Date();
-//     const oneWeekLater = new Date(today);
-//     oneWeekLater.setDate(today.getDate() + 7); // add 7 days
-
-//     // Find members whose membership ends within the next 7 days
-//     const expiringMembers = await member
-//       .find({
-//         endDate: {
-//           $gte: today, // endDate is today or later
-//           $lte: oneWeekLater, // but within 7 days
-//         },
-//       })
-//       .sort({ endDate: 1 });
-
-//     res.status(200).json({
-//       success: true,
-//       count: expiringMembers.length,
-//       data: expiringMembers,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching expiring members:", error);
-//     res.status(500).json({
-//       success: false,
-//       message: "Server Error",
-//     });
-//   }
-// };
-
-// expiring within one month
-
 export const getExpiringMembers = async (req, res) => {
   try {
     const today = new Date();
@@ -136,6 +109,54 @@ export const getExpiringMembers = async (req, res) => {
       success: false,
       message: "Server Error",
     });
+  }
+};
+
+export const getExpiredMembers = async (req, res) => {
+  try {
+    const today = new Date();
+    const threeDaysAgo = new Date();
+    threeDaysAgo.setDate(today.getDate() - 3); // expired within last 3 days
+
+    const expiredMembers = await member
+      .find({
+        endDate: { $lt: today, $gte: threeDaysAgo },
+      })
+      .sort({ endDate: -1 });
+
+    res.status(200).json({ success: true, data: expiredMembers });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const renewMembership = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { months } = req.body;
+
+    const today = new Date();
+    const newEndDate = new Date(today);
+    newEndDate.setMonth(today.getMonth() + months);
+
+    const updatedMember = await member.findByIdAndUpdate(
+      id,
+      { startDate: today, endDate: newEndDate },
+      { new: true }
+    );
+
+    if (!updatedMember)
+      return res
+        .status(404)
+        .json({ success: false, message: "Member not found" });
+
+    res.status(200).json({
+      success: true,
+      message: "Membership renewed",
+      member: updatedMember,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

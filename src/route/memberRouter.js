@@ -3,11 +3,13 @@ import express from "express";
 import multer from "multer";
 import {
   createMember,
+  getExpiredMembers,
   getExpiringMembers,
   getMemberGrowth,
   getMembersByClass,
   getNewMembers,
   readAllMembers,
+  renewMembership,
   revenue,
   revenueChart,
 } from "../controller/memberController.js";
@@ -33,6 +35,10 @@ memberRoute.get("/all-members", readAllMembers);
 memberRoute.get("/new-member", getNewMembers);
 
 memberRoute.get("/expiring-members", getExpiringMembers);
+
+memberRoute.get("/expired-members", getExpiredMembers);
+
+memberRoute.put("/renew-membership/:id", renewMembership);
 
 memberRoute.get("/revenue", revenue);
 
