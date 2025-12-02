@@ -160,6 +160,25 @@ export const renewMembership = async (req, res) => {
   }
 };
 
+export const deleteMember = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    await member.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Member deleted successfully",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete member",
+      error: err.message,
+    });
+  }
+};
+
 export const revenue = async (req, res) => {
   try {
     const members = await member.find({});

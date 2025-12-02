@@ -3,6 +3,7 @@ import express from "express";
 import multer from "multer";
 import {
   createMember,
+  deleteMember,
   getExpiredMembers,
   getExpiringMembers,
   getMemberGrowth,
@@ -39,6 +40,8 @@ memberRoute.get("/expiring-members", getExpiringMembers);
 memberRoute.get("/expired-members", getExpiredMembers);
 
 memberRoute.put("/renew-membership/:id", renewMembership);
+
+memberRoute.delete("/delete-member/:id", deleteMember);
 
 memberRoute.get("/revenue", revenue);
 
