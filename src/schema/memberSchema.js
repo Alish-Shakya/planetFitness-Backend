@@ -25,13 +25,13 @@ const memberSchema = new mongoose.Schema(
     classType: {
       type: String,
       required: true,
-      enum: ["gym", "zumba", "cardio"], // only these classes allowed
+      enum: ["gym", "zumba", "gym & cardio"], // only these classes allowed
     },
 
     membership: {
       type: String,
       required: true,
-      enum: ["monthly", "quarterly", "yearly"],
+      enum: ["monthly", "3 months", "quarterly", "yearly"],
     },
     amountPaid: {
       type: Number,

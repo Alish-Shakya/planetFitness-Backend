@@ -182,7 +182,11 @@ export const deleteMember = async (req, res) => {
 export const revenue = async (req, res) => {
   try {
     const members = await member.find({});
-    const totalRevenue = members.reduce((sum, mem) => sum + mem.amountPaid, 0);
+
+    const totalRevenue = members.reduce((sum, mem) => {
+      const amount = Number(mem.amountPaid) || 0; // SAFE FIX
+      return sum + amount;
+    }, 0);
 
     res.status(200).json({
       success: true,
