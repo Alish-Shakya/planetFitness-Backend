@@ -58,7 +58,7 @@ export const getNewMembers = async (req, res) => {
       0,
       23,
       59,
-      59
+      59,
     );
 
     const newMembers = await member.find({
@@ -142,7 +142,7 @@ export const renewMembership = async (req, res) => {
     const updatedMember = await member.findByIdAndUpdate(
       id,
       { startDate: today, endDate: newEndDate },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedMember)

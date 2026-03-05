@@ -9,7 +9,7 @@ import { member } from "./src/model/model.js";
 import dayjs from "dayjs";
 
 const app = express();
-const port = 8000;
+const port = 5000;
 
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
@@ -27,7 +27,7 @@ app.use("/member", memberRoute);
 // AUTO DELETE
 cron.schedule("*/1 * * * *", async () => {
   // every minute
-  console.log("CRON JOB STARTED...");
+  // console.log("CRON JOB STARTED...");
 
   try {
     const today = dayjs();
